@@ -26,10 +26,14 @@ from .utils import compute_args_hash, wrap_embedding_func_with_attrs
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
+_STOP_COUNT=100
+_MULTIPLIER=2
+_MIN=5
+_MAX=600
 
 @retry(
-    stop=stop_after_attempt(10),
-    wait=wait_exponential(multiplier=1, min=4, max=30),
+    stop=stop_after_attempt(_STOP_COUNT),
+    wait=wait_exponential(multiplier=_MULTIPLIER, min=_MIN, max=_MAX),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),
 )
 async def openai_complete_if_cache(
@@ -70,8 +74,8 @@ async def openai_complete_if_cache(
     return response.choices[0].message.content
 
 @retry(
-    stop=stop_after_attempt(10),
-    wait=wait_exponential(multiplier=1, min=4, max=30),
+    stop=stop_after_attempt(_STOP_COUNT),
+    wait=wait_exponential(multiplier=_MULTIPLIER, min=_MIN, max=_MAX),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),
 )
 async def azure_openai_complete_if_cache(model,
@@ -372,8 +376,8 @@ async def ollama_model_complete(
 
 @wrap_embedding_func_with_attrs(embedding_dim=1536, max_token_size=8192)
 @retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=4, max=60),
+    stop=stop_after_attempt(_STOP_COUNT),
+    wait=wait_exponential(multiplier=_MULTIPLIER, min=_MIN, max=_MAX),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),
 )
 async def openai_embedding(
@@ -396,8 +400,8 @@ async def openai_embedding(
 
 @wrap_embedding_func_with_attrs(embedding_dim=1536, max_token_size=8192)
 @retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=4, max=10),
+    stop=stop_after_attempt(_STOP_COUNT),
+    wait=wait_exponential(multiplier=_MULTIPLIER, min=_MIN, max=_MAX),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),
 )
 async def azure_openai_embedding(
@@ -422,8 +426,8 @@ async def azure_openai_embedding(
 
 
 @retry(
-    stop=stop_after_attempt(3),
-    wait=wait_exponential(multiplier=1, min=4, max=60),
+    stop=stop_after_attempt(_STOP_COUNT),
+    wait=wait_exponential(multiplier=_MULTIPLIER, min=_MIN, max=_MAX),
     retry=retry_if_exception_type((RateLimitError, APIConnectionError, Timeout)),
 )
 async def siliconcloud_embedding(
