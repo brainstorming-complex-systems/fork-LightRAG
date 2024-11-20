@@ -12,7 +12,7 @@ if not os.path.exists(WORKING_DIR):
 rag = LightRAG(
     working_dir=WORKING_DIR,
     llm_model_func=ollama_model_complete,
-    llm_model_name="your_model_name",
+    llm_model_name="qwen2m",
     embedding_func=EmbeddingFunc(
         embedding_dim=768,
         max_token_size=8192,
